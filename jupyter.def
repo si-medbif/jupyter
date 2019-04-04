@@ -1,0 +1,22 @@
+BootStrap: docker
+From: continuumio/anaconda3
+
+%help
+    Singularity image (version 3) for jupyter notebook
+
+%post
+     # Install jupyter notebook
+     /opt/conda/bin/conda install jupyter wheel numpy scipy \
+          dicom matplotlib scikit-image openslide-python \
+          tensorflow tflearn -y --quiet 
+     mkdir /opt/notebooks
+     apt-get autoremove -y
+     apt-get clean
+
+%runscript
+
+     echo "Starting notebook..."
+     echo "Open browser to localhost:8888"
+     exec /opt/conda/bin/jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --allow-root --port=8888 --no-browser
+
+
