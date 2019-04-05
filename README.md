@@ -12,12 +12,12 @@ If you haven not installed singularity, do that with [these instructions](https:
 
 1) Download the repo:
 ```
-      git clone https://github.com/si-medbif/jupyter-openslide-tflearn
-      cd jupyter-openslide-tflearn
+git clone https://github.com/si-medbif/jupyter-openslide-tflearn
+cd jupyter-openslide-tflearn
 ```      
 2) Build the container
 ```
-      sudo singularity build jupyter.sif jupyter.def
+sudo singularity build jupyter.sif jupyter.def
 ```
 
 # Run the container
@@ -25,13 +25,17 @@ If you haven not installed singularity, do that with [these instructions](https:
 A local path must be mapped to `/opt/notebooks` to work with the notebooks. IP of the local machine or the server hosting the container must be assigned in <x.x.x.x> (e.g. --ip=123.45.67.890). `--NotebookApp.token=''` and  `--NotebookApp.password=''` are for turning off authentication. If you require some security, please change the values.
 
 ```   
-      singularity run -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --port=8888 --notebook-dir=/opt/notebooks --allow-root  --no-browser --NotebookApp.token='' --NotebookApp.password=''
+singularity run -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --port=8888 \
+      --notebook-dir=/opt/notebooks --allow-root  --no-browser \
+      --NotebookApp.token='' --NotebookApp.password=''
 ```
 
 Singularity 3.x supports `cgroups` for resource limitation. If you are to run the container on a server sharing resources with multiple users, it would be better to use `cgroups`. Using `cgroups` requires `sudo` as shown below
 
 ```
-      sudo singularity run --apply-cgroups path/to/cgroups.toml -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --port=8888 --notebook-dir=/opt/notebooks --allow-root  --no-browser --NotebookApp.token='' --NotebookApp.password=''
+sudo singularity run --apply-cgroups path/to/cgroups.toml -B $PWD/notebooks:/opt/notebooks \
+      jupyter.sif --ip=<x.x.x.x> --port=8888 --notebook-dir=/opt/notebooks --allow-root  \
+      --no-browser --NotebookApp.token='' --NotebookApp.password=''
 ```
 
 More details regarding `cgroups` in Singularity can be found [here](https://www.sylabs.io/guides/3.0/user-guide/cgroups.html)
