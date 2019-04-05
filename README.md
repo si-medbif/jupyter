@@ -1,47 +1,43 @@
-# Jupyter
+# Overview
 
-This example will show how to run a jupyter notebook server with nginx, from a container (singularity container in this case).
+This singularity container was modified from 'https://github.com/singularityhub/jupyter' and 'https://github.com/dash00/tensorflow-python3-jupyter'
 
-- perhaps you ran an analysis when you created the container, and want to serve the notebook as a result) or
-- perhaps you want this to be like a working container, to store a particular version of your software to use on local files
+The purpose of modification was to migrate from Singularity version 2.x to version 3.x (https://www.sylabs.io/guides/3.0/user-guide/). Deep learning and image processings modules along with their dependency were also installed.
 
-If you haven't installed singularity, do that with [these instructions](http://singularity.lbl.gov/install-linux). Then Download the repo if you haven't already:
+# Singularity
 
-      git clone https://www.github.com/singularityhub/jupyter
-      cd jupyter
+If you haven not installed singularity, do that with [these instructions](https://www.sylabs.io/guides/3.0/user-guide/quick_start.html).
 
+# Building a container
 
-Let's now create a jupyter notebook!
-First, we will create the writable container image in a _writable_ *ext3* file system, instead of the *squashfs* which only allows _read-only_. [read more](http://singularity.lbl.gov/docs-build-container)
+1) Download the repo:
+```
+      git clone https://github.com/si-medbif/jupyter-openslide-tflearn
+      cd jupyter-openslide-tflearn
+```      
+2) Build the container
+```
+      sudo singularity build jupyter.sif jupyter.def
+```
 
-     sudo singularity build --writable jupyter.img Singularity
+# Run the container
 
-Then to run our container, since we need to write files to `/opt/notebooks` inside the container, we must use sudo and add the `--writable` command:
+A local path must be mapped to `/opt/notebooks` to work with the notebooks. IP of the local machine or the server hosting the container must be assigned in <x.x.x.x> (e.g. --ip=123.45.67.890). `--NotebookApp.token=''` and  `--NotebookApp.password=''` are for turning off authentication. If you require some security, please change the values.
 
-      sudo singularity run --writable jupyter.img
+```   
+      singularity run -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --port=8888 --notebook-dir=/opt/notebooks --allow-root  --no-browser --NotebookApp.token='' --NotebookApp.password=''
+```
 
-When we open the browser, we see our server! Cool!
+Singularity 3.x supports `cgroups` for resource limitation. If you are to run the container on a server sharing resources with multiple users, it would be better to use `cgroups`. Using `cgroups` requires `sudo` as shown below
 
-![jupyter.png](jupyter.png)
+```
+      sudo singularity run --apply-cgroups path/to/cgroups.toml -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --port=8888 --notebook-dir=/opt/notebooks --allow-root  --no-browser --NotebookApp.token='' --NotebookApp.password=''
+```
 
-Since the notebooks are being written to the image, this means that all of our work is preserved in it. I can finish working, close up shop, and hand my image to someone else, and it's preserved. Here, I'll show you. Let's shell into the container after we've shut down the server (note that I didn't need to use sudo for this).
+More details regarding `cgroups` in Singularity can be found [here](https://www.sylabs.io/guides/3.0/user-guide/cgroups.html)
 
-      sudo singularity shell jupyter.img 
-      Singularity: Invoking an interactive shell within container...
+# Note on port forwarding
 
-      Singularity.jupyter.img> ls /opt/notebooks
-      Untitled.ipynb
-
-There it is! I really should work on naming my files better :) That is so cool.
-
-You can also map to a folder on your local machine, if you don't want to save the notebooks inside:
-
-      sudo singularity run -B $PWD:/opt/notebooks --writable jupyter.img
-
-and here I am sitting in my local directory, but the entire software and depdencies are provided by my container. STILL really cool.
-
-![local.png](local.png)
-## Note on port forwarding
 If you are running Singularity in Windows through vagrant. You will need to configure port fowarding in the Vagrantfile that you use to set up the Singularity container as well. 
 As an example, you should add a line that might look like this.
 `config.vm.network "forwarded_port", guest: 8888, host: 8888, host_ip: "127.0.0.1"`
