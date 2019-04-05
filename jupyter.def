@@ -1,22 +1,55 @@
 BootStrap: docker
-From: continuumio/anaconda3
+From: ubuntu:18.04
 
 %help
     Singularity image (version 3) for jupyter notebook
 
 %post
-     # Install jupyter notebook
-     /opt/conda/bin/conda install jupyter wheel numpy scipy \
-          dicom matplotlib scikit-image openslide-python \
-          tensorflow tflearn -y --quiet 
-     mkdir /opt/notebooks
-     apt-get autoremove -y
-     apt-get clean
-
+    apt-get update && apt-get install -y --no-install-recommends \
+        build-essential \
+        curl \
+        libfreetype6-dev \
+        libpng12-dev \
+        libzmq3-dev \
+        pkg-config \
+        python \
+        python3 \
+        python3-dev \
+        python-pip \
+        python3-pip \
+        python3-setuptools \
+        rsync \
+        software-properties-common \
+        unzip \
+        && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+    
+    pip3 --no-cache-dir install \
+        wheel \
+        dicom \
+        scikit-image \
+        openslide-python \
+        ipykernel \
+        jupyter \
+        matplotlib \
+        numpy \
+        scipy \
+        sklearn \
+        pandas \
+        Pillow \
+        && \
+    python3 -m ipykernel.kernelspec
+    
+    pip3 --no-cache-dir install --upgrade tensorflow
+    
+    pip3 --no-cache-dir install tflearn
+    
 %runscript
 
      echo "Starting notebook..."
-     echo "Open browser to localhost:8888"
-     exec /opt/conda/bin/jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --allow-root --port=8888 --no-browser
+     echo "Open browser to localhost:8865"
+     exec /opt/conda/bin/jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --allow-root --port=8865 \
+          --no-browser --NotebookApp.token='' --NotebookApp.password=''
 
 
