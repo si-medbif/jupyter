@@ -2,7 +2,7 @@
 
 This singularity container was modified from 'https://github.com/singularityhub/jupyter' and 'https://github.com/dash00/tensorflow-python3-jupyter'
 
-The purpose of modification was to migrate from Singularity version 2.x to version 3.x (https://www.sylabs.io/guides/3.0/user-guide/). Deep learning and image processings modules along with their dependency were also installed.
+The purpose of modification was to migrate from Singularity version 2.x to [version 3.x](https://www.sylabs.io/guides/3.0/user-guide/). Deep learning and image processings modules along with their dependency were also installed.
 
 ## Singularity
 
