@@ -2,14 +2,14 @@ BootStrap: docker
 From: ubuntu:18.04
 
 %help
-    Singularity image (version 3) for jupyter notebook
+    Singularity image (version 3) for jupyter notebook with deep learning and image processing modules
 
 %post
     apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
         curl \
         libfreetype6-dev \
-        libpng12-dev \
+        libpng-dev \
         libzmq3-dev \
         pkg-config \
         python \
@@ -21,17 +21,17 @@ From: ubuntu:18.04
         rsync \
         software-properties-common \
         unzip \
+        openslide-tools \
         && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
-    
+
     mkdir /opt/notebooks
     
     pip3 --no-cache-dir install \
         wheel \
         dicom \
         scikit-image \
-        openslide-python \
         ipykernel \
         jupyter \
         matplotlib \
@@ -40,18 +40,15 @@ From: ubuntu:18.04
         sklearn \
         pandas \
         Pillow \
+        openslide-python \
         && \
     python3 -m ipykernel.kernelspec
-    
+
     pip3 --no-cache-dir install --upgrade tensorflow
-    
+
     pip3 --no-cache-dir install tflearn
-    
+
 %runscript
 
      echo "Starting notebook..."
-     echo "Open browser to localhost:8865"
-     exec /opt/conda/bin/jupyter notebook --notebook-dir=/opt/notebooks --ip='*' --allow-root --port=8865 \
-          --no-browser --NotebookApp.token='' --NotebookApp.password=''
-
-
+     exec jupyter notebook "$@"
