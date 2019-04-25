@@ -5,6 +5,7 @@ From: ubuntu:18.04
     Singularity image (version 3) for jupyter notebook with deep learning and image processing modules
 
 %files
+    # Set path to Google key file here
     /path/to/google-cloud-key.json /opt/
 
 %post
@@ -79,6 +80,7 @@ From: ubuntu:18.04
     rm -rf /var/lib/apt/lists/*
 
 %environment
+    #Rename *.json file here
     export GOOGLE_APPLICATION_CREDENTIALS='/opt/google-cloud-key.json'
     
 %runscript
