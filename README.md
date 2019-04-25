@@ -8,6 +8,9 @@ The purpose of modification was to migrate from Singularity version 2.x to [vers
 
 If you haven not installed singularity, do that with [these instructions](https://www.sylabs.io/guides/3.0/user-guide/quick_start.html).
 
+## Google Cloud Credentials
+A key file (something.json) is required for building this container. Please see [Google API instructions](https://cloud.google.com/docs/authentication/getting-started) for more details. NOTE: 'role/storage.admin' for accessing google bucket.
+
 ## Building a container
 
 1) Download the repo:
