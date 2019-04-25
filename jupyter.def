@@ -72,8 +72,10 @@ From: ubuntu:18.04
     pip3 --no-cache-dir install --upgrade tensorflow
 
     pip3 --no-cache-dir install tflearn
+    
+    chmod 755 /opt/google-cloud-key.json
 
-    gcloud auth activate-service-account --key-file /opt/singularity-docker3.json
+    gcloud auth activate-service-account --key-file /opt/google-cloud-key.json
     gcloud config set project trf-deeppath-clone
 
     apt-get clean && \
