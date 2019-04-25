@@ -9,7 +9,7 @@ The purpose of modification was to migrate from Singularity version 2.x to [vers
 If you haven not installed singularity, do that with [these instructions](https://www.sylabs.io/guides/3.0/user-guide/quick_start.html).
 
 ## Google Cloud Credentials
-A key file (something.json) is required for building this container. Please see [Google API instructions](https://cloud.google.com/docs/authentication/getting-started) for more details. NOTE: 'role/storage.admin' for accessing google bucket.
+A key file (something.json) is required for building this container. Please see [Google API instructions](https://cloud.google.com/docs/authentication/getting-started) for more details. <ub>NOTE:</ub> --role 'role/storage.admin' for accessing google bucket.
 
 ## Building a container
 
@@ -28,7 +28,7 @@ sudo singularity build jupyter.sif jupyter.def
 A local path must be mapped to `/opt/notebooks` to work with the notebooks. IP of the local machine or the server hosting the container must be assigned in <x.x.x.x> (e.g. --ip=123.45.67.890). `--NotebookApp.token=''` and  `--NotebookApp.password=''` are for turning off authentication. If you require some security, please change the values.
 
 ```   
-singularity run -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --port=8888 \
+singularity run -B $PWD/notebooks:/opt/notebooks -B $PWD/user:/run/user jupyter.sif --ip=<x.x.x.x> --port=8888 \
       --notebook-dir=/opt/notebooks --allow-root  --no-browser \
       --NotebookApp.token='' --NotebookApp.password=''
 ```
@@ -36,7 +36,7 @@ singularity run -B $PWD/notebooks:/opt/notebooks jupyter.sif --ip=<x.x.x.x> --po
 Singularity 3.x supports `cgroups` for resource limitation. If you are to run the container on a server sharing resources with multiple users, it would be better to use `cgroups`. Using `cgroups` requires `sudo` as shown below
 
 ```
-sudo singularity run --apply-cgroups path/to/cgroups.toml -B $PWD/notebooks:/opt/notebooks \
+sudo singularity run --apply-cgroups path/to/cgroups.toml -B $PWD/notebooks:/opt/notebooks -B $PWD/user:/run/user \
       jupyter.sif --ip=<x.x.x.x> --port=8888 --notebook-dir=/opt/notebooks --allow-root  \
       --no-browser --NotebookApp.token='' --NotebookApp.password=''
 ```
