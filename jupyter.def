@@ -4,6 +4,9 @@ From: ubuntu:18.04
 %help
     Singularity image (version 3) for jupyter notebook with deep learning and image processing modules
 
+%files
+    /path/to/google-cloud-key.json /opt/
+
 %post
     apt-get update && apt-get install -y --no-install-recommends \
         build-essential \
@@ -13,9 +16,11 @@ From: ubuntu:18.04
         libzmq3-dev \
         pkg-config \
         python \
+        python-dev \
+        python-setuptools \
+        python-pip \
         python3 \
         python3-dev \
-        python-pip \
         python3-pip \
         python3-setuptools \
         libffi-dev \
@@ -23,12 +28,28 @@ From: ubuntu:18.04
         software-properties-common \
         unzip \
         openslide-tools \
-        && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+        gpg-agent \
+
+    echo "deb http://packages.cloud.google.com/apt cloud-sdk-bionic main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+    curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+
+    apt-get update && apt-get install -y --no-install-recommends \
+        google-cloud-sdk \
+        google-cloud-sdk-app-engine-python \
+        google-cloud-sdk-app-engine-python-extras \
+        google-cloud-sdk-app-engine-java \
+        google-cloud-sdk-app-engine-go \
+        google-cloud-sdk-datalab \
+        google-cloud-sdk-datastore-emulator \
+        google-cloud-sdk-pubsub-emulator \
+        google-cloud-sdk-cbt \
+        google-cloud-sdk-cloud-build-local \
+        google-cloud-sdk-bigtable-emulator \
+        kubectl \
 
     mkdir /opt/notebooks
-    
+
     pip3 --no-cache-dir install \
         wheel \
         dicom \
@@ -42,6 +63,7 @@ From: ubuntu:18.04
         pandas \
         Pillow \
         openslide-python \
+        google-cloud-storage \
         gsutil \
         && \
     python3 -m ipykernel.kernelspec
@@ -49,10 +71,17 @@ From: ubuntu:18.04
     pip3 --no-cache-dir install --upgrade tensorflow
 
     pip3 --no-cache-dir install tflearn
+
+    gcloud auth activate-service-account --key-file /opt/singularity-docker3.json
+    gcloud config set project trf-deeppath-clone
+
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+%environment
+    export GOOGLE_APPLICATION_CREDENTIALS='/opt/google-cloud-key.json'
     
-    gcloud init
-
 %runscript
-
      echo "Starting notebook..."
      exec jupyter notebook "$@"
+
