@@ -45,10 +45,11 @@ def to_gbucket(file_name, bucket):
 
     
 if __name__ == '__main__':
+    #RUN with python3 NCItoGBucket.py gdc_sample_sheet.tsv bucket_name
     filelst = loadgdc(sys.argv[1])
     for i in range(len(filelst[0])):
         file_id = filelst[0][i]
         file_name = filelst[1][i]
         getsvs(file_id,file_name)
-        to_gbucket(file_name,'nci-test')  
+        to_gbucket(file_name,sys.argv[1])  
   
