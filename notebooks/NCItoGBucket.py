@@ -51,5 +51,5 @@ if __name__ == '__main__':
         file_id = filelst[0][i]
         file_name = filelst[1][i]
         getsvs(file_id,file_name)
-        to_gbucket(file_name,sys.argv[1])  
+        to_gbucket(file_name,sys.argv[2])  
   
