@@ -34,6 +34,7 @@ def getsvs(file_id,file_name):
                 done = int(50 * dl / total_length)
                 sys.stdout.write("\r[%s%s]" % ('=' * done, ' ' * (50-done)) )    
                 sys.stdout.flush()
+                
 def to_gbucket(file_name, bucket):
     storage_client = storage.Client()
     bucket = storage_client.get_bucket(bucket)
