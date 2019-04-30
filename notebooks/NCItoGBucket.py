@@ -65,8 +65,9 @@ def to_gbucket(file_name, bucket):
 
     
 if __name__ == '__main__':
-    filelst = loadgdc_json(sys.argv[1])
-    bucket = sys.argv[2]
+    '''USAGE: python3 NCItoGBucket.py gdc_meta_data.json google-bucket-name '''
+    filelst = loadgdc_json(sys.argv[1]) #gdc_meta_data.json
+    bucket = sys.argv[2] #google-bucket-name
     exist = lst_bucket(bucket)
     i = 0
     while i < len(filelst):
@@ -79,15 +80,16 @@ if __name__ == '__main__':
             try:
                 getsvs(file_id,file_name)
                 to_gbucket(file_name,bucket)
-                i += 1
+                #i += 1 #Comment out to check md5sum of the newly uploaded file
+                exist = lst_bucket(bucket)
             except:
-                time.sleep(30)
+                time.sleep(30) #Try reconnecting in 30s
         elif file_md5 != str(blob_md5(bucket, file_name)):
             try:
                 getsvs(file_id,file_name)
                 to_gbucket(file_name,bucket)
-                i += 1
+                #i += 1 #Comment out to check md5sum of the newly uploaded file
             except:
-                time.sleep(30)
+                time.sleep(30) #Try reconnecting in 30s
         else:
             i += 1
